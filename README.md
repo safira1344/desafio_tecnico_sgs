@@ -30,6 +30,7 @@ database/
 ### Pré-requisitos
 
 - **POSTGRESQL_VERSION**= 18.4 
+- **JAVA_VERSION**= 17.0
 
 ### Passo a passo
 

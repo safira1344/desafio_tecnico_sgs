@@ -11,6 +11,7 @@ import br.com.fernanda.sgs.model.SolicitacaoListagemDTO;
 import br.com.fernanda.sgs.exception.SolicitanteNaoEncontradoException;
 import br.com.fernanda.sgs.exception.TransicaoStatusInvalidaException;
 import br.com.fernanda.sgs.exception.CategoriaNaoEncontradaException;
+import br.com.fernanda.sgs.exception.SolicitacaoNaoEncontradaException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -56,6 +57,12 @@ public class SolicitacaoService {
         return solicitacaoRepository.listarComFiltros(status, categoriaId, dataInicio, dataFim);
     }
 
+    public Solicitacao buscarPorId(Integer id) {
+        return solicitacaoRepository.findById(id)
+            .orElseThrow(() -> new SolicitacaoNaoEncontradaException(
+                "Solicitação com id " + id + " não encontrada."));
+    }
+
     public void validarTransicao(StatusSolicitacao statusAtual, StatusSolicitacao statusNovo) {
         boolean transicaoValida;
 
@@ -84,5 +91,13 @@ public class SolicitacaoService {
                 "Transição de " + statusAtual + " para " + statusNovo + " não é permitida."
             );
         }
+    }
+
+    public void atualizarStatus(Integer id, StatusSolicitacao novoStatus) {
+        Solicitacao solicitacao = buscarPorId(id);
+        validarTransicao(solicitacao.getStatus(), novoStatus);
+        solicitacao.setStatus(novoStatus);
+
+        solicitacaoRepository.save(solicitacao);
     }
 }

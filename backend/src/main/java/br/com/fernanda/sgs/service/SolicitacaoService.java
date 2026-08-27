@@ -27,20 +27,16 @@ public class SolicitacaoService {
     private final CategoriaRepository categoriaRepository;
 
     public SolicitacaoService(SolicitacaoRepository solicitacaoRepository, SolicitanteRepository solicitanteRepository, CategoriaRepository categoriaRepository) {
-            this.solicitacaoRepository = solicitacaoRepository;
-            this.solicitanteRepository = solicitanteRepository;
-            this.categoriaRepository = categoriaRepository;
+        this.solicitacaoRepository = solicitacaoRepository;
+        this.solicitanteRepository = solicitanteRepository;
+        this.categoriaRepository = categoriaRepository;
     }
 
     public Solicitacao criar(Integer solicitanteId, Integer categoriaId, String descricao, BigDecimal valor) {
 
-        Solicitante solicitante = solicitanteRepository.findById(solicitanteId)
-            .orElseThrow(() -> new SolicitanteNaoEncontradoException(
-                "Solicitante com id " + solicitanteId + " não encontrado."));
+        Solicitante solicitante = solicitanteRepository.findById(solicitanteId).orElseThrow(() -> new SolicitanteNaoEncontradoException("Solicitante com id " + solicitanteId + " não encontrado."));
 
-        Categoria categoria = categoriaRepository.findById(categoriaId)
-            .orElseThrow(() -> new CategoriaNaoEncontradaException(
-                "Categoria com id " + categoriaId + " não encontrada."));
+        Categoria categoria = categoriaRepository.findById(categoriaId).orElseThrow(() -> new CategoriaNaoEncontradaException("Categoria com id " + categoriaId + " não encontrada."));
 
         Solicitacao solicitacao = new Solicitacao();
         solicitacao.setSolicitante(solicitante);
@@ -58,9 +54,7 @@ public class SolicitacaoService {
     }
 
     public Solicitacao buscarPorId(Integer id) {
-        return solicitacaoRepository.findById(id)
-            .orElseThrow(() -> new SolicitacaoNaoEncontradaException(
-                "Solicitação com id " + id + " não encontrada."));
+        return solicitacaoRepository.findById(id).orElseThrow(() -> new SolicitacaoNaoEncontradaException("Solicitação com id " + id + " não encontrada."));
     }
 
     public void validarTransicao(StatusSolicitacao statusAtual, StatusSolicitacao statusNovo) {
@@ -87,17 +81,15 @@ public class SolicitacaoService {
         }
 
         if (!transicaoValida) {
-            throw new TransicaoStatusInvalidaException(
-                "Transição de " + statusAtual + " para " + statusNovo + " não é permitida."
-            );
+            throw new TransicaoStatusInvalidaException("Transição de " + statusAtual + " para " + statusNovo + " não é permitida.");
         }
     }
 
-    public void atualizarStatus(Integer id, StatusSolicitacao novoStatus) {
+    public Solicitacao atualizarStatus(Integer id, StatusSolicitacao novoStatus) {
         Solicitacao solicitacao = buscarPorId(id);
         validarTransicao(solicitacao.getStatus(), novoStatus);
         solicitacao.setStatus(novoStatus);
-
-        solicitacaoRepository.save(solicitacao);
+        
+        return solicitacaoRepository.save(solicitacao);
     }
 }

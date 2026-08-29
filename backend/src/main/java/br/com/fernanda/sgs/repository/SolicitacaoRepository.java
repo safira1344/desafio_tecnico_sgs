@@ -18,10 +18,10 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Intege
         from solicitacao s
         join solicitante sol on sol.id = s.solicitante_id
         join categoria c on c.id = s.categoria_id
-        where (:status is null or s.status = :status) 
-        and (:categoriaId is null or c.id = :categoriaId)
-        and (:dataInicio is null or s.data_solicitacao >= :dataInicio)
-        and (:dataFim is null or s.data_solicitacao <= :dataFim)
+        where (cast(:status as varchar) is null or s.status = cast(:status as varchar))
+        and (cast(:categoriaId as integer) is null or c.id = cast(:categoriaId as integer))
+        and (cast(:dataInicio as date) is null or s.data_solicitacao >= cast(:dataInicio as date))
+        and (cast(:dataFim as date) is null or s.data_solicitacao <= cast(:dataFim as date))
         """, nativeQuery = true)
     List<SolicitacaoListagemDTO> listarComFiltros(
         @Param("status") String status,

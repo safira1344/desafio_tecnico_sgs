@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestão de Solicitações</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="cabecalho">
+        <div id="icone">
+            <i class="fa-solid fa-users-gear fa-2xl" style="color: #ffffff;"></i>
+        </div>
+        <div id="textos-cabecalho">
+            <h1>Sistema de Gestão de Solicitações</h1>
+            <p class="subtitulo">Registro, consulta e acompanhamento de solicitações de pagamento</p>
+        </div>
+    </header>
+
+    <nav class="abas">
+        <button class="aba-botao ativo" data-alvo="painel-solicitacoes" type="button">Solicitações</button>
+        <button class="aba-botao" data-alvo="painel-cadastro" type="button">Nova Solicitação</button>
+    </nav>
+
+    <main class="conteudo">
+        <div id="area-mensagens" class="mensagem"></div>
+
+        <section id="painel-solicitacoes" class="aba-painel ativo">
+            <form id="formulario-filtros" class="cartao filtros">
+                <div class="campo">
+                    <label for="filtro-status">Status</label>
+                    <select id="filtro-status">
+                        <option value="">Todos os status</option>
+                        <option value="SOLICITADO">Solicitado</option>
+                        <option value="LIBERADO">Liberado</option>
+                        <option value="APROVADO">Aprovado</option>
+                        <option value="REJEITADO">Rejeitado</option>
+                        <option value="CANCELADO">Cancelado</option>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label for="filtro-categoria">Categoria</label>
+                    <select id="filtro-categoria">
+                        <option value="">Todas as categorias</option>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label for="filtro-data-inicio">Data início</label>
+                    <input type="date" id="filtro-data-inicio">
+                </div>
+
+                <div class="campo">
+                    <label for="filtro-data-fim">Data fim</label>
+                    <input type="date" id="filtro-data-fim">
+                </div>
+
+                <div class="campo campo-acoes">
+                    <button type="submit" id="btn-filtrar" class="botao botao-primario">Filtrar</button>
+                    <button type="button" id="botao-limpar-filtros" class="botao botao-secundario">Limpar</button>
+                </div>
+            </form>
+
+            <div class="cartao">
+                <div class="tabela-scroll">
+                    <table class="tabela">
+                        <thead>
+                            <tr>
+                                <th>Solicitante</th>
+                                <th>Documento</th>
+                                <th>Categoria</th>
+                                <th>Status</th>
+                                <th>Valor</th>
+                                <th>Data</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="corpo-tabela-solicitacoes"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="painel-cadastro" class="aba-painel">
+            <form id="formulario-cadastro" class="cartao formulario">
+                <h2>Nova Solicitação</h2>
+
+                <div class="campo">
+                    <label for="campo-solicitante">Solicitante</label>
+                    <select id="campo-solicitante" required></select>
+                </div>
+
+                <div class="campo">
+                    <label for="campo-categoria">Categoria</label>
+                    <select id="campo-categoria" required></select>
+                </div>
+
+                <div class="campo">
+                    <label for="campo-descricao">Descrição</label>
+                    <textarea id="campo-descricao" maxlength="300" rows="3"></textarea>
+                </div>
+
+                <div class="campo">
+                    <label for="campo-valor">Valor (R$)</label>
+                    <input type="number" id="campo-valor" min="0.01" step="0.01" required>
+                </div>
+
+                <div class="campo campo-acoes">
+                    <button type="submit" class="botao botao-primario">Cadastrar</button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <div id="modal-detalhe" class="modal">
+        <div class="modal-caixa">
+            <button type="button" class="modal-fechar" aria-label="Fechar">&times;</button>
+            <h2>Detalhes da Solicitação</h2>
+            <div id="modal-conteudo"></div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

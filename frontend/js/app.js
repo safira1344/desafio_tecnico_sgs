@@ -21,6 +21,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+const TRANSICOES_PERMITIDAS = {
+    SOLICITADO: ["LIBERADO", "REJEITADO"],
+    LIBERADO: ["APROVADO", "REJEITADO"],
+    APROVADO: ["CANCELADO"],
+    REJEITADO: [],
+    CANCELADO: []
+};
+
 const formatadorMoeda = new Intl.NumberFormat("pt-BR", {
     style: "currency",
     currency: "BRL"
@@ -113,6 +121,23 @@ async function aplicarFiltros() {
 
 async function abrirModalDetalhes(id) {
     const solicitacao = await buscarSolicitacaoPorId(id);
+    const proximosStatus = TRANSICOES_PERMITIDAS[solicitacao.status];
+
+    let areaStatusHtml;
+
+    if (proximosStatus.length > 0) {
+        const opcoesHtml = proximosStatus.map((status) => `<option value="${status}">${status}</option>`).join("");
+
+        areaStatusHtml = `
+            <div class="campo">
+                <label for="select-novo-status">Alterar status para:</label>
+                <select id="select-novo-status">${opcoesHtml}</select>
+            </div>
+            <button id="btn-confirmar-status" class="botao botao-primario">Confirmar alteração</button>
+        `;
+    } else {
+        areaStatusHtml = `<p class="aviso-status-final">Este é um status final e não pode ser alterado.</p>`;
+    }
 
     const modalConteudo = document.getElementById("modal-conteudo");
 
@@ -125,7 +150,22 @@ async function abrirModalDetalhes(id) {
         <p><strong>Valor:</strong> ${formatarMoeda(solicitacao.valor)}</p>
         <p><strong>Data da Solicitação:</strong> ${formatarData(solicitacao.dataSolicitacao)}</p>
         <p><strong>Status atual:</strong> ${solicitacao.status}</p>
+        ${areaStatusHtml}
     `;
+
+    if (proximosStatus.length > 0) {
+        document.getElementById("btn-confirmar-status").addEventListener("click", async () => {
+            const novoStatus = document.getElementById("select-novo-status").value;
+
+            try {
+                await atualizarStatusSolicitacao(solicitacao.id, novoStatus);
+                fecharModal();
+                await carregarListagem();
+            } catch (erro) {
+                alert("Erro ao atualizar status: " + erro.message);
+            }
+        });
+    }
 
     document.getElementById("modal-detalhe").classList.add("ativo");
 }

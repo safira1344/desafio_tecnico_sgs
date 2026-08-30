@@ -14,17 +14,15 @@ Sistemas de Computação.
 
 ## Estrutura do projeto
 
+```text
 desafio_tecnico_sgs/
-│
-├── backend/              # API Java Spring Boot
-│
-├── frontend/             # Interface web (HTML/CSS/JS)
-│
-├── database/             # Scripts do banco de dados
-│   ├── 1-ddl.sql         # Criação das tabelas
-│   └── 2-dml.sql         # População com dados de teste
-│
-└── README.md             # Documentação do projeto
+├── backend/          # API Java Spring Boot
+├── frontend/         # Interface web (HTML/CSS/JS)
+├── database/
+│   ├── 1-ddl.sql     # Criação das tabelas
+│   └── 2-dml.sql     # Scripts de população (dados de teste)
+└── README.md
+```
 
 
 ## Modelagem do banco de dados
